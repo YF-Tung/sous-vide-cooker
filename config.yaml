@@ -1,0 +1,22 @@
+# 運行模式（可選: cook, switch_detect）
+mode: cook
+
+# 主程式輪詢頻率（秒）
+polling_interval: 2.0
+
+# GPIO 腳位配置（含實體腳位與建議線色）
+gpio:
+  switch_input_pin: 17     # 實體 pin 11：開關訊號，導通即開（建議線色：灰）
+  thermometer_data_pin: 4  # 實體 pin 7：DS18B20 資料腳，固定用 GPIO4（建議線色：藍）
+  display_clk_pin: 22      # 實體 pin 15：TM1637 CLK（建議線色：綠）
+  display_dio_pin: 27      # 實體 pin 13：TM1637 DIO（建議線色：黃）
+  power_led: 10            # 實體 pin 19：電源指示燈（建議線色：棕）
+
+# 電源與接地（實體腳位與建議線色）
+# ※ 不參與程式控制，純硬體接線用參考
+vcc_pin: 17                # 實體 pin 17：3.3V 電源（建議線色：白）
+gnd_pins:
+  - 6                    # 實體 pin 6：GND（建議線色：黑）
+  - 9                    # 實體 pin 9：GND（視實際接線選用）
+
+# 備註：DS18B20 資料腳與 3.3V 間需串接一顆 4.7kΩ 上拉電阻
