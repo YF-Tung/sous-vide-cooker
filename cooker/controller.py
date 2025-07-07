@@ -53,7 +53,8 @@ class SousVideController:
         """處理舒肥機活動狀態時的核心溫控邏輯。"""
         try:
             # 1. 讀取溫度
-            temperature = self.thermometer.read_temperature()
+            #temperature = self.thermometer.read_temperature()
+            temperature = await asyncio.to_thread(self.thermometer.read_temperature)
             logger.info(f"Current temperature: {temperature:.2f}°C")
             self.display.show_temperature(temperature)
 
