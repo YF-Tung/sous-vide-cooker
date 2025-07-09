@@ -2,13 +2,10 @@ import asyncio
 import time
 import logging
 import yaml
-
-from logger_config import setup_logging
-setup_logging()
-
 from hardware.switch import is_switch_on
 from cooker.controller import SousVideController
-
+from logger_config import setup_logging
+setup_logging()
 logger = logging.getLogger(__name__)
 
 
