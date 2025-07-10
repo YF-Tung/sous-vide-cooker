@@ -25,8 +25,9 @@ async def main():
     controller = SousVideController(config=config)
     last_switch_state = None
 
+    loop = asyncio.get_running_loop()
     while True:
-        ts = time.time()
+        ts = loop.time()
         switch_state = is_switch_on()
 
         if switch_state != last_switch_state:
@@ -34,7 +35,7 @@ async def main():
             last_switch_state = switch_state
 
         await controller.tick()
-        remaining_time = max(polling_interval - (time.time() - ts), 0.1)
+        remaining_time = max(polling_interval - (loop.time() - ts), 0.1)
         await asyncio.sleep(remaining_time)
 
 

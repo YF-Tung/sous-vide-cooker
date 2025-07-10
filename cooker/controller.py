@@ -6,6 +6,7 @@ from hardware.power_led import PowerLED
 from hardware.smart_plug import KasaSmartPlug
 from cooker.temp_control_strategy import TemperatureControlStrategy
 from cooker.simple_on_off_strategy import SimpleOnOffStrategy
+from cooker.two_phase_strategy import TwoPhaseStrategy
 from cooker.data_logger import DataLogger
 
 logger = logging.getLogger(__name__)
@@ -20,7 +21,8 @@ class SousVideController:
         self.power_led = PowerLED()
         self.data_logger = DataLogger()
 
-        self.control_strategy: TemperatureControlStrategy = SimpleOnOffStrategy()
+        # self.control_strategy: TemperatureControlStrategy = SimpleOnOffStrategy()
+        self.control_strategy: TemperatureControlStrategy = TwoPhaseStrategy()
         self.current_plug_state = None  # 輔助LED燈號
 
         logger.debug(f"SousVideController initialized with mode={self.mode}")
