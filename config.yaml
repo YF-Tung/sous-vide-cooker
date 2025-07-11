@@ -8,8 +8,8 @@ polling_interval: 2.0
 gpio:
   thermometer_data_pin: 4  # 實體 pin 7：DS18B20 資料腳，固定用 GPIO4（建議線色：藍）
   switch_input_pin: 17     # 實體 pin 11：開關訊號，導通即開（建議線色：灰）
-  display_dio_pin: 27      # 實體 pin 13：TM1637 DIO（建議線色：黃）
-  display_clk_pin: 22      # 實體 pin 15：TM1637 CLK（建議線色：綠）
+  display_clk_pin: 27      # 實體 pin 13：TM1637 CLK（建議線色：綠）
+  display_dio_pin: 22      # 實體 pin 15：TM1637 DIO（建議線色：黃）
   power_led: 10            # 實體 pin 19：電源指示燈（建議線色：棕）
   temp_up_switch_pin: 9    # 實體 pin 21：溫度上調開關（建議線色：橙）
   temp_down_switch_pin: 11 # 實體 pin 23：溫度下調開關（建議線色：紫）
