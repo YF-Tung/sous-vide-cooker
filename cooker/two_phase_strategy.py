@@ -61,3 +61,11 @@ class TwoPhaseStrategy(TemperatureControlStrategy):
             desired_state = False  # 太熱，希望關閉
 
         return desired_state
+
+    def change_target_temperature(self, degree_to_change: float):
+        """
+        改變目標溫度，並記錄變更。
+        :param degree_to_change: 要改變的溫度值（正數表示升高，負數表示降低）。
+        """
+        self.target_temperature += round(degree_to_change, 1)
+        logger.info(f"目標溫度已改變為 {self.target_temperature:.2f}°C")

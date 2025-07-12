@@ -3,7 +3,7 @@ import asyncio
 from hardware.thermometer import Thermometer
 from hardware.display import DisplayManager
 from hardware.power_led import PowerLED
-from hardware.smart_plug import KasaSmartPlug
+from hardware.kasa_client import KasaClient
 from hardware.temp_button_manager import TempButtonManager
 from cooker.temp_control_strategy import TemperatureControlStrategy
 from cooker.simple_on_off_strategy import SimpleOnOffStrategy
@@ -12,12 +12,13 @@ from cooker.data_logger import DataLogger
 
 logger = logging.getLogger(__name__)
 
+
 class SousVideController:
     def __init__(self, config: dict):
         self.active = False
         self.thermometer = Thermometer()
         self.display = DisplayManager()
-        self.smart_plug = KasaSmartPlug()
+        self.smart_plug = KasaClient()
         self.mode = config.get("mode", "normal")
         self.power_led = PowerLED()
         self.data_logger = DataLogger()
@@ -46,18 +47,17 @@ class SousVideController:
         else:
             logger.info("🟢 Switch turned ON. System set to active, awaiting temperature control.")
 
-
     async def _handle_inactive_state(self):
         """處理舒肥機非活動狀態時的邏輯。"""
         logger.debug("Sous-vide inactive. Tick skipped.")
-        await self.smart_plug.turn_off() # 確保插座關閉
-        self.display.clear() # 清空顯示器
+        await self.smart_plug.turn_off()  # 確保插座關閉
+        self.display.clear()  # 清空顯示器
 
     async def _handle_active_state(self):
         """處理舒肥機活動狀態時的核心溫控邏輯。"""
         try:
             # 1. 讀取溫度
-            #temperature = self.thermometer.read_temperature()
+            # temperature = self.thermometer.read_temperature()
             temperature = await asyncio.to_thread(self.thermometer.read_temperature)
             logger.info(f"Current temperature: {temperature:.2f}°C")
             self.display.show_temperature(temperature)
@@ -84,7 +84,7 @@ class SousVideController:
         except Exception as e:
             logger.error(f"Error during active state handling: {e}", exc_info=True)
             self.display.show_text("Err")
-            await self.smart_plug.turn_off() # 錯誤時保險起見關閉插座
+            await self.smart_plug.turn_off()  # 錯誤時保險起見關閉插座
 
     async def tick(self):
         logger.debug("Tick called in SousVideController.")

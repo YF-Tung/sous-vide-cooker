@@ -2,7 +2,7 @@
 mode: cook
 
 # 主程式輪詢頻率（秒）
-polling_interval: 2.0
+polling_interval: 1.0
 
 # GPIO 腳位配置（含實體腳位與建議線色）
 gpio:

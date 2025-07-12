@@ -1,14 +1,14 @@
-# hardware/smart_plug.py
+# hardware/kasa_client.py
 
 import asyncio
 import logging
 import time
-from hardware.kasa_device_client import KasaDeviceClient
+from hardware.raw_kasa_client import RawKasaClient
 
 logger = logging.getLogger(__name__)
 
 
-class KasaSmartPlug:
+class KasaClient:
     """
     用於控制 TP-Link Kasa 智慧插座的 Class。
     內部維護目標狀態，並在背景任務中按步調執行操作，包含頻率限制。
@@ -24,7 +24,7 @@ class KasaSmartPlug:
             update_interval (float): 背景任務更新頻率 (秒)。
         """
         # 不再接收 ip_address 參數
-        self._device_client = KasaDeviceClient()
+        self._device_client = RawKasaClient()
         self._min_op_interval = min_op_interval
         self._last_op_time = 0.0
 

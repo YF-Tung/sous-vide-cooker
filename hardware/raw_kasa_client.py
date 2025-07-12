@@ -1,4 +1,4 @@
-# hardware/kasa_device_client.py
+# hardware/raw_kasa_client.py
 import logging
 
 from kasa import Discover
@@ -6,7 +6,7 @@ from kasa import Discover
 logger = logging.getLogger(__name__)
 
 
-class KasaDeviceClient:
+class RawKasaClient:
     def __init__(self):
         """
         初始化 KasaDeviceClient，負責與 Kasa 設備進行通信。
