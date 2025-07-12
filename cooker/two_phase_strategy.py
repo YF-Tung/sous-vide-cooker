@@ -1,4 +1,5 @@
 # cooker/simple_on_off_strategy.py
+import asyncio
 import logging
 import time
 
@@ -23,16 +24,18 @@ class TwoPhaseStrategy(TemperatureControlStrategy):
         self._min_change_interval = 10.0  # 最小操作間隔 (秒)
 
     def _ok_to_change(self) -> bool:
-        time_since_last_change = time.time() - self._last_actual_change_time
+        loop = asyncio.get_running_loop()
+        time_since_last_change = loop.time() - self._last_actual_change_time
         logger.debug(f"Time since last change: {time_since_last_change:.2f} seconds, ")
         return time_since_last_change >= self._min_change_interval
 
     def _update_state(self, current_plug_is_on: bool):
+        loop = asyncio.get_running_loop()
         logger.debug(f"Updating state: Current plug is {'ON' if current_plug_is_on else 'OFF'}")
         if self._last_observed_state is None or self._last_observed_state != current_plug_is_on:
             logger.debug("status" + str(self._last_observed_state) + str(current_plug_is_on))
             logger.debug(f"State change detected: {'ON' if current_plug_is_on else 'OFF'}")
-            self._last_actual_change_time = time.time()
+            self._last_actual_change_time = loop.time()
         self._last_observed_state = current_plug_is_on
 
     async def decide_action(self, current_temperature: float, current_plug_is_on: bool) -> bool | None:

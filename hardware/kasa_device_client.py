@@ -5,6 +5,7 @@ from kasa import Discover
 
 logger = logging.getLogger(__name__)
 
+
 class KasaDeviceClient:
     def __init__(self):
         """
@@ -13,6 +14,7 @@ class KasaDeviceClient:
         """
         self._plug = None
         self._strip = None
+
     _PLUG_ID = 0
 
     async def _get_device(self):
@@ -36,7 +38,6 @@ class KasaDeviceClient:
             await strip.update()
         except:
             raise ConnectionError("KasaDeviceClient failed to connect")
-
 
     async def turn_off(self):
         """實際發送關閉指令給 Kasa 設備，並更新其狀態。"""

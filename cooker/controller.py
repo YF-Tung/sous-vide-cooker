@@ -4,6 +4,7 @@ from hardware.thermometer import Thermometer
 from hardware.display import DisplayManager
 from hardware.power_led import PowerLED
 from hardware.smart_plug import KasaSmartPlug
+from hardware.temp_button_manager import TempButtonManager
 from cooker.temp_control_strategy import TemperatureControlStrategy
 from cooker.simple_on_off_strategy import SimpleOnOffStrategy
 from cooker.two_phase_strategy import TwoPhaseStrategy
@@ -20,6 +21,7 @@ class SousVideController:
         self.mode = config.get("mode", "normal")
         self.power_led = PowerLED()
         self.data_logger = DataLogger()
+        self.temp_control_input = TempButtonManager()
 
         # self.control_strategy: TemperatureControlStrategy = SimpleOnOffStrategy()
         self.control_strategy: TemperatureControlStrategy = TwoPhaseStrategy()
@@ -61,7 +63,7 @@ class SousVideController:
             self.display.show_temperature(temperature)
 
             # 2. 讓溫控策略決定行動
-            self.current_plug_state = await self.smart_plug.is_on()
+            self.current_plug_state = self.smart_plug.is_on()
             self.data_logger.log(temperature, self.current_plug_state)
             if self.current_plug_state is None:
                 logger.warning("Failed to get current plug state, assuming OFF.")
@@ -73,7 +75,11 @@ class SousVideController:
                 else:
                     await self.smart_plug.turn_off()
 
-            #self.display.show_text_secondary(self.control_strategy.get_status_message())
+        except KeyboardInterrupt as e:
+            logger.info("KeyboardInterrupt received, stopping sous-vide process.")
+            self.display.clear()
+            await self.smart_plug.turn_off()
+            raise
 
         except Exception as e:
             logger.error(f"Error during active state handling: {e}", exc_info=True)
@@ -82,11 +88,8 @@ class SousVideController:
 
     async def tick(self):
         logger.debug("Tick called in SousVideController.")
-        await self.smart_plug.ensure_started()  # 確保智能插座的狀態更新任務正在運行
+        await self.smart_plug.start_updater()  # 確保智能插座的狀態更新任務正在運行
         """主循環中的週期性處理函式。"""
-        if self.mode == "switch_detect":
-            return # 在 switch_detect 模式下，tick 什麼都不做
-
         if not self.active:
             await self._handle_inactive_state()
         else:

@@ -1,13 +1,13 @@
 import asyncio
-import time
 import logging
 import yaml
-from hardware.switch import is_switch_on
+from hardware.switch import SwitchInputManager
 from cooker.controller import SousVideController
 from logger_config import setup_logging
 setup_logging()
 logger = logging.getLogger(__name__)
 
+switch_input = SwitchInputManager()
 
 def load_config():
     try:
@@ -28,7 +28,7 @@ async def main():
     loop = asyncio.get_running_loop()
     while True:
         ts = loop.time()
-        switch_state = is_switch_on()
+        switch_state = switch_input.is_switch_on()
 
         if switch_state != last_switch_state:
             await controller.on_switch_changed(switch_state)
