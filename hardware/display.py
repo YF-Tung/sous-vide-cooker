@@ -19,6 +19,7 @@ class DisplayManager:
         logger.debug(f"TM1637 initialized on CLK={clk_pin}, DIO={dio_pin}")
 
     def show_temperature(self, temp_c: float):
+        logger.debug(f"Displaying temperature: {temp_c}°C")
         """顯示攝氏溫度（支援小數點，0~99.9°C）"""
         try:
             if 0.0 <= temp_c < 100.0:

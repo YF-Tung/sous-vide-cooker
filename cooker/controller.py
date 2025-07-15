@@ -22,7 +22,7 @@ class SousVideController:
         self.mode = config.get("mode", "normal")
         self.power_led = PowerLED()
         self.data_logger = DataLogger()
-        self.temp_control_input = TempButtonManager()
+        # self.temp_control_input = TempButtonManager()
 
         # self.control_strategy: TemperatureControlStrategy = SimpleOnOffStrategy()
         self.control_strategy: TemperatureControlStrategy = TwoPhaseStrategy()

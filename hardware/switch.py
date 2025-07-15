@@ -14,6 +14,7 @@ class SwitchInputManager:
         logger.debug(f"Main switch initialized on GPIO{pin}")
 
     def is_switch_on(self) -> bool:
+        logger.debug(f"Switch is {'ON' if self.switch.is_pressed else 'OFF'}")
         return self.switch.is_pressed
 
     def close(self):
