@@ -4,3 +4,4 @@ lgpio             # Pi 5 使用 gpiozero 時所需的底層驅動（自動載入
 PyYAML>=6.0       # 讀取 config.yaml
 python-tm1637>=1.1.1
 python-kasa
+flask

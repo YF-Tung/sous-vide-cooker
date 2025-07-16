@@ -1,6 +1,8 @@
 import os
 import logging
 import random
+import time
+from collections import deque
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +16,9 @@ class Thermometer:
 
     def __init__(self):
         self.device_file = None  # lazy init
+        self._last_temperature = None  # 用於記錄上次讀取的溫度
         logger.debug("Thermometer initialized (lazy device setup)")
+        self._history = deque(maxlen=3600)
 
     def _find_device_file(self) -> str:
         if not os.path.exists(self.BASE_DIR):
@@ -26,6 +30,24 @@ class Thermometer:
 
         device_path = os.path.join(self.BASE_DIR, devices[0], "w1_slave")
         return device_path
+
+    def get_last_temperature(self) -> float | None:
+        """
+        這是在假設溫度計已經被讀取過的情況下，返回最後一次讀取的溫度。
+        :return:
+        """
+        return self._last_temperature
+
+    def _record_temperature(self, temperature: float):
+        self._last_temperature = temperature  # 更新最後讀取的溫度
+        timestamp = time.time()
+        self._history.append((timestamp, temperature))
+
+    def get_history(self):
+        """
+        回傳 list，每筆是 (timestamp, temperature)
+        """
+        return list(self._history)
 
     def read_temperature(self) -> float:
         if not self.device_file:
@@ -44,6 +66,7 @@ class Thermometer:
         try:
             temp_str = lines[1].split("t=")[-1]
             temperature = float(temp_str) / 1000.0
+            self._record_temperature(temperature)
             return round(temperature, 2)
         except Exception as e:
             raise RuntimeError(f"Failed to parse temperature: {e}")

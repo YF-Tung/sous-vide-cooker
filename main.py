@@ -4,6 +4,7 @@ import yaml
 from hardware.switch import SwitchInputManager
 from cooker.controller import SousVideController
 from logger_config import setup_logging
+from webui.app import WebUI
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -24,6 +25,8 @@ async def main():
     polling_interval = config.get("polling_interval")
 
     controller = SousVideController(config=config)
+    web = WebUI(controller)
+    web.run_in_background()
     switch_input = SwitchInputManager()
     last_switch_state = None
 
